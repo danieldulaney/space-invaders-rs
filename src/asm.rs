@@ -1,7 +1,3 @@
-pub type Address = u16;
-
-pub type Port = u8;
-
 pub enum Instruction {
     // Page 4-4
     MOVRegReg { dest: Register, src: Register },
@@ -96,7 +92,13 @@ pub enum Instruction {
     DI,
     HLT,
     NOP,
+
+    Unknown(u8),
 }
+
+pub type Address = u16;
+
+pub type Port = u8;
 
 pub enum Register {
     A,
@@ -126,4 +128,3 @@ pub enum Condition {
     M,
 }
 
-impl Instruction {}
