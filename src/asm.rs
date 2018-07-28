@@ -54,12 +54,12 @@ pub enum Instruction {
     XRAMem(Address),
     XRI(u8),
     ORAReg(Register),
-    ORAMem(Memory),
+    ORAMem(Address),
     ORI(u8),
     CMPReg(Register),
 
     // Page 4-10
-    CMPMem(Memory),
+    CMPMem(Address),
     CPI(u8),
     RLC,
     RRC,
@@ -123,7 +123,7 @@ pub enum Condition {
     PO,
     PE,
     P,
-    M
+    M,
 }
 
 impl Instruction {}
