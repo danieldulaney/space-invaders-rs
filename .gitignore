@@ -1,0 +1,6 @@
+/target
+**/*.rs.bk
+
+# Don't upload space invaders rom
+invaders.rom
+
