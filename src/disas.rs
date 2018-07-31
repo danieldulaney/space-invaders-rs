@@ -34,7 +34,6 @@ pub fn decode(data: &[u8]) -> Result<Instruction, DecodeError> {
             dest: B,
         },
         0x07 => RLC,
-        0x08 => return Err(UnknownOpcode(0x08)),
         0x09 => DAD(BC),
         0x0a => LDAX(BC),
         0x0b => DCX(BC),
@@ -45,7 +44,30 @@ pub fn decode(data: &[u8]) -> Result<Instruction, DecodeError> {
             dest: C,
         },
         0x0f => RRC,
-        data => unimplemented!(),
+        0x11 => LXI {
+            src: fetch_two(data)?,
+            dest: DE,
+        },
+        0x12 => STAX(DE),
+        0x13 => INX(DE),
+        0x14 => INRReg(D),
+        0x15 => DCRReg(D),
+        0x16 => MVIReg {
+            src: fetch_one(data)?,
+            dest: D,
+        },
+        0x17 => RAL,
+        0x19 => DAD(DE),
+        0x1a => LDAX(DE),
+        0x1b => DCX(DE),
+        0x1c => INRReg(E),
+        0x1d => DCRReg(E),
+        0x1e => MVIReg {
+            src: fetch_one(data)?,
+            dest: E,
+        },
+        0x1f => RAR,
+        data => return Err(UnknownOpcode(data)),
     })
 }
 
