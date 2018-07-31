@@ -1,5 +1,5 @@
 // See http://www.nj7p.info/Manuals/PDFs/Intel/9800153B.pdf
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub enum Instruction {
     // Page 4-4
     MOVRegReg { dest: Register, src: Register },
@@ -14,8 +14,8 @@ pub enum Instruction {
     STA { dest: Address },
     LHLD { src: Address },
     SHLD { dest: Address },
-    LDAX { src: Pair },
-    STAX { dest: Pair },
+    LDAX(Pair),
+    STAX(Pair),
     XCHG,
 
     // Page 4-6
@@ -94,8 +94,6 @@ pub enum Instruction {
     DI,
     HLT,
     NOP,
-
-    Unknown(Option<u8>),
 }
 
 pub type Address = u16;
@@ -115,9 +113,9 @@ pub enum Register {
 
 #[derive(Debug, PartialEq, Eq)]
 pub enum Pair {
-    B,
-    D,
-    H,
+    BC,
+    DE,
+    HL,
     SP,
 }
 
@@ -163,9 +161,9 @@ impl Pair {
     pub fn from_code(code: u8) -> Pair {
         match code & 0x03 {
             // 0b00000011
-            0x00 => Pair::B,
-            0x01 => Pair::D,
-            0x02 => Pair::H,
+            0x00 => Pair::BC,
+            0x01 => Pair::DE,
+            0x02 => Pair::HL,
             0x03 => Pair::SP,
             _ => unreachable!("Used masking to eliminate higher bits; this is impossible"),
         }
@@ -195,9 +193,9 @@ mod test {
 
     #[test]
     fn correct_pairs() {
-        assert_eq!(Pair::from_code(0), Pair::B);
-        assert_eq!(Pair::from_code(97), Pair::D);
-        assert_eq!(Pair::from_code(26), Pair::H);
+        assert_eq!(Pair::from_code(0), Pair::BC);
+        assert_eq!(Pair::from_code(97), Pair::DE);
+        assert_eq!(Pair::from_code(26), Pair::HL);
         assert_eq!(Pair::from_code(0xFF), Pair::SP);
     }
 }
