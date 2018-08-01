@@ -1,6 +1,7 @@
-use asm::{Address, Condition, Instruction, Pair, Port, Register};
+use asm::{Condition, Instruction};
 use std::iter::IntoIterator;
 
+use asm::Condition::{M, NC, NZ, P, PE, PO, Z};
 use asm::Instruction::*;
 use asm::Pair::*;
 use asm::Register::*;
@@ -244,6 +245,70 @@ pub fn decode(data: &[u8]) -> Result<Instruction, DecodeError> {
         0xbd => CMPReg(L),
         0xbe => CMPMem,
         0xbf => CMPReg(A),
+        0xc0 => RCond(NZ),
+        0xc1 => POP(BC),
+        0xc2 => JCond(NZ, fetch_two(data)?),
+        0xc3 => JMP(fetch_two(data)?),
+        0xc4 => CCond(NZ, fetch_two(data)?),
+        0xc5 => PUSH(BC),
+        0xc6 => ADI(fetch_one(data)?),
+        0xc7 => RST(0),
+        0xc8 => RCond(Z),
+        0xc9 => RET,
+        0xca => JCond(Z, fetch_two(data)?),
+        // 0xcb is undefined
+        0xcc => CCond(Z, fetch_two(data)?),
+        0xcd => CALL(fetch_two(data)?),
+        0xce => ACI(fetch_one(data)?),
+        0xcf => RST(1),
+        0xd0 => RCond(NC),
+        0xd1 => POP(DE),
+        0xd2 => JCond(NC, fetch_two(data)?),
+        0xd3 => OUT(fetch_one(data)?),
+        0xd4 => CCond(NC, fetch_two(data)?),
+        0xd5 => PUSH(DE),
+        0xd6 => SUI(fetch_one(data)?),
+        0xd7 => RST(2),
+        0xd8 => RCond(Condition::C),
+        // 0xd9 is undefined
+        0xda => JCond(Condition::C, fetch_two(data)?),
+        0xdb => IN(fetch_one(data)?),
+        0xdc => CCond(Condition::C, fetch_two(data)?),
+        // 0xdd is undefined
+        0xde => SBI(fetch_one(data)?),
+        0xdf => RST(3),
+        0xe0 => RCond(PO),
+        0xe1 => POP(HL),
+        0xe2 => JCond(PO, fetch_two(data)?),
+        0xe3 => XTHL,
+        0xe4 => CCond(PO, fetch_two(data)?),
+        0xe5 => PUSH(HL),
+        0xe6 => ANI(fetch_one(data)?),
+        0xe7 => RST(4),
+        0xe8 => RCond(PE),
+        0xe9 => PCHL,
+        0xea => JCond(PE, fetch_two(data)?),
+        0xeb => XCHG,
+        0xec => CCond(PE, fetch_two(data)?),
+        // 0xed is undefined
+        0xee => XRI(fetch_one(data)?),
+        0xef => RST(5),
+        0xf0 => RCond(P),
+        0xf1 => POPPSW,
+        0xf2 => JCond(P, fetch_two(data)?),
+        0xf3 => DI,
+        0xf4 => CCond(P, fetch_two(data)?),
+        0xf5 => PUSHPSW,
+        0xf6 => ORI(fetch_one(data)?),
+        0xf7 => RST(6),
+        0xf8 => RCond(M),
+        0xf9 => SPHL,
+        0xfa => JCond(M, fetch_two(data)?),
+        0xfb => EI,
+        0xfc => CCond(M, fetch_two(data)?),
+        // 0xfd is undefined
+        0xfe => CPI(fetch_one(data)?),
+        0xff => RST(7),
         data => return Err(UnknownOpcode(data)),
     })
 }
