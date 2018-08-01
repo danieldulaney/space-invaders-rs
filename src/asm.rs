@@ -44,20 +44,20 @@ pub enum Instruction {
     DAD(Pair),
     DAA,
     ANAReg(Register),
-    ANAMem(Address),
+    ANAMem,
 
     // Page 4-9
     ANI(u8),
     XRAReg(Register),
-    XRAMem(Address),
+    XRAMem,
     XRI(u8),
     ORAReg(Register),
-    ORAMem(Address),
+    ORAMem,
     ORI(u8),
     CMPReg(Register),
 
     // Page 4-10
-    CMPMem(Address),
+    CMPMem,
     CPI(u8),
     RLC,
     RRC,
