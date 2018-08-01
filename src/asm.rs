@@ -20,7 +20,7 @@ pub enum Instruction {
 
     // Page 4-6
     ADDReg(Register),
-    ADDMem(Address),
+    ADDMem,
     ADI(u8),
     ADCReg(Register),
     ADCMem,
